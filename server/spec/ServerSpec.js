@@ -68,7 +68,6 @@ describe('Node Server Request Listener Function', function() {
 
     // Expect 201 Created response status
     expect(res._responseCode).to.equal(201);
-
     // Testing for a newline isn't a valid test
     // TODO: Replace with with a valid test
     // expect(res._data).to.equal(JSON.stringify('\n'));
@@ -90,11 +89,12 @@ describe('Node Server Request Listener Function', function() {
       // Now if we request the log for that room the message we posted should be there:
     req = new stubs.request('/classes/messages', 'GET');
     res = new stubs.response();
-
+    // debugger;
     handler.requestHandler(req, res);
 
     expect(res._responseCode).to.equal(200);
     var messages = JSON.parse(res._data).results;
+    // console.log('test', messages)
     expect(messages.length).to.be.above(0);
     expect(messages[0].username).to.equal('Jono');
     expect(messages[0].message).to.equal('Do my bidding!');

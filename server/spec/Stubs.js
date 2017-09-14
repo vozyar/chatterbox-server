@@ -14,6 +14,8 @@ module.exports = {
 
     this.end = function(data) {
       this._ended = true;
+
+      // console.log('end', data)
       this._data = data;
     }.bind(this);
   },

@@ -11,7 +11,8 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var message = {results: [{username: 'whit', text: 'hi'}]};
+var responseObj = {results: []};
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -25,46 +26,55 @@ var requestHandler = function(request, response) {
   // Do some basic logging.
   //
   // Adding more logging to your server can be an easy way to get passive
-  // debugging help, but you should always be careful about leaving stray
-  console.log('Serving request type ' + request.method + ' for url ' + request.url);
-  var responseObj = {results: []};
+  // debugging help, but youb should always be careful about leaving stray
+  // console.log('Serving request type ' + request.method + ' for url ' + request.url);
+  // console.log(request.uri)
   
   var headers = defaultCorsHeaders;
  
-  headers['Content-Type'] = 'text/plain';
+  headers['Content-Type'] = 'application/json';
   
   var statusCode = 200;
-  // if(request.method === 'OPTIONS'){
-  //   console.log('options')
-  // }
   
   if (request.url.substring(0, 17) !== '/classes/messages') {
     statusCode = 404;
   }
-  
-  if (request.method === 'POST' /*|| request.method === 'OPTIONS'*/) {
+  if (request.method === 'OPTIONS') {
+    // console.log('options')
+    response.writeHead(statusCode, headers);
+    response.end(JSON.stringify(responseObj));
+  }
+  var body = [];
+  if (request.method === 'POST') {
     statusCode = 201;
     
     request.on('data', (chunk) => {
-      
-      responseObj.results.push(chunk);
-      
+      body.push(chunk);
     });
+
     request.on('end', function () {
-      console.log('POSTed: ' + responseObj.results);
+      // console.log('POSTed: ' + responseObj.results);
+      // console.log('ffff', body.join(''))
+      body = Buffer.concat(body).toString();
+      body = JSON.parse(body)
+      console.log(body)
+      // var newMessage = {
+      //   username: body.username,
+      //   text: body.text,
+      //   roomname: body.roomname
+      // };
+      responseObj.results.push(body);
+      console.log(responseObj)
+
       response.writeHead(statusCode, headers);
       response.end(JSON.stringify(responseObj));
     });
   }
-  if (request.method === 'GET' /*|| request.method === 'OPTIONS'*/) {
-    request.on('data', function(chunk) {
-      console.log('get: ' + chunk);
-    });
-    request.on('end', function () {
-      console.log('gotten: ' + responseObj.results);
-      response.writeHead(statusCode, headers);
-      response.end(JSON.stringify(responseObj));
-    });
+//not properly storing posts on real thing
+  if (request.method === 'GET') {
+    response.writeHead(statusCode, headers);
+    // console.log('get', responseObj)
+    response.end(JSON.stringify(responseObj));
   }
   // See the note below about CORS headers.
   // var headers = defaultCorsHeaders;
