@@ -30,6 +30,7 @@ var app = {
     app.stopSpinner();
     app.fetch(false);
 
+
     // Poll for new messages
     setInterval(function() {
       app.fetch(true);
@@ -43,7 +44,8 @@ var app = {
     $.ajax({
       url: app.server,
       type: 'POST',
-      data: message,
+      data: JSON.stringify(message),
+      // data: message,
       success: function (data) {
         // Clear messages input
         app.$message.val('');
@@ -226,12 +228,12 @@ var app = {
   },
 
   startSpinner: function() {
-    $('.spinner img').show();
-    $('form input[type=submit]').attr('disabled', 'true');
+    // $('.spinner img').show();
+    // $('form input[type=submit]').attr('disabled', 'true');
   },
 
   stopSpinner: function() {
-    $('.spinner img').fadeOut('fast');
-    $('form input[type=submit]').attr('disabled', null);
+    // $('.spinner img').fadeOut('fast');
+    // $('form input[type=submit]').attr('disabled', null);
   }
 };

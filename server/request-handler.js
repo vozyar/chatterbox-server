@@ -56,7 +56,7 @@ var requestHandler = function(request, response) {
     request.on('end', function () {
       // console.log('POSTed: ' + responseObj.results);
       // console.log('ffff', body.join(''))
-      body = Buffer.concat(body).toString();
+      body = body.join('');
       body = JSON.parse(body);
   
       responseObj.results.push(body); 
