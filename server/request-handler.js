@@ -11,7 +11,7 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-var message = {results: [{username: 'whit', text: 'hi'}]};
+// var message = {results: [{username: 'whit', text: 'hi'}]};
 var responseObj = {results: []};
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -30,6 +30,7 @@ var requestHandler = function(request, response) {
   // console.log('Serving request type ' + request.method + ' for url ' + request.url);
   // console.log(request.uri)
   
+  
   var headers = defaultCorsHeaders;
  
   headers['Content-Type'] = 'application/json';
@@ -40,12 +41,12 @@ var requestHandler = function(request, response) {
     statusCode = 404;
   }
   if (request.method === 'OPTIONS') {
-    // console.log('options')
+
     response.writeHead(statusCode, headers);
     response.end(JSON.stringify(responseObj));
   }
-  var body = [];
   if (request.method === 'POST') {
+    var body = [];
     statusCode = 201;
     
     request.on('data', (chunk) => {
@@ -56,16 +57,9 @@ var requestHandler = function(request, response) {
       // console.log('POSTed: ' + responseObj.results);
       // console.log('ffff', body.join(''))
       body = Buffer.concat(body).toString();
-      body = JSON.parse(body)
-      console.log(body)
-      // var newMessage = {
-      //   username: body.username,
-      //   text: body.text,
-      //   roomname: body.roomname
-      // };
-      responseObj.results.push(body);
-      console.log(responseObj)
-
+      body = JSON.parse(body);
+  
+      responseObj.results.push(body); 
       response.writeHead(statusCode, headers);
       response.end(JSON.stringify(responseObj));
     });
